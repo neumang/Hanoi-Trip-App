@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הנוי 2026 – המסלול שלנו</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #C0392B;
+    --yellow: #F4C542;
+    --dark: #1A1A2E;
+    --ink: #2C2C3E;
+    --cream: #FDF8F0;
+    --muted: #7A7A8C;
+    --card: #FFFFFF;
+    --border: #E8E2D8;
+    --food: #E8F5E9;
+    --food-accent: #2E7D32;
+    --tip: #FFF8E1;
+    --tip-accent: #F57F17;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .hero {
+    background: var(--dark);
+    color: white;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse at 80% 50%, rgba(192,57,43,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 20% 80%, rgba(244,197,66,0.15) 0%, transparent 50%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(255,255,255,0.015) 40px, rgba(255,255,255,0.015) 41px
+    );
+  }
+  .hero-content {
+    position: relative; z-index: 1;
+    padding: 36px 20px 28px;
+    text-align: center;
+  }
+  .flag-row {
+    font-size: 28px;
+    margin-bottom: 12px;
+    letter-spacing: 6px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--yellow); }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.65);
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  /* PART TABS */
+  .part-tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    padding: 0 16px 32px;
+    position: relative; z-index: 1;
+  }
+  .part-tab {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.8);
+    border-radius: 30px;
+    padding: 9px 20px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .part-tab.active, .part-tab:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  /* MAIN */
+  .main { max-width: 700px; margin: 0 auto; padding: 0 14px 80px; }
+
+  /* PART SECTION */
+  .part-section { display: none; }
+  .part-section.visible { display: block; }
+
+  .part-header {
+    text-align: center;
+    padding: 28px 0 20px;
+  }
+  .part-label {
+    display: inline-block;
+    background: var(--red);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .part-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .part-header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-top: 4px;
+  }
+
+  /* DAY CARD */
+  .day-card {
+    background: white;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+  }
+  .day-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+  }
+  .day-number {
+    background: var(--red);
+    color: white;
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+  .day-info { flex: 1; }
+  .day-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .day-info p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .day-emoji { font-size: 1.4rem; }
+  .day-toggle {
+    font-size: 1rem;
+    color: var(--muted);
+    transition: transform 0.25s;
+  }
+  .day-card.open .day-toggle { transform: rotate(180deg); }
+
+  .day-body {
+    display: none;
+    padding: 0 20px 20px;
+  }
+  .day-card.open .day-body { display: block; }
+
+  /* TIMELINE */
+  .timeline { position: relative; }
+  .tl-item {
+    display: flex;
+    gap: 14px;
+    padding: 10px 0;
+    position: relative;
+  }
+  .tl-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    right: 18px;
+    top: 38px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--border);
+  }
+  .tl-time {
+    flex-shrink: 0;
+    width: 74px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--red);
+    padding-top: 3px;
+  }
+  .tl-dot {
+    width: 10px; height: 10px;
+    background: var(--red);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.15);
+  }
+  .tl-content { flex: 1; padding-bottom: 4px; }
+  .tl-content h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+  .tl-content p {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  /* NAV BUTTONS */
+  .nav-buttons {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-decoration: none;
+    font-family: 'Heebo', sans-serif;
+    transition: all 0.15s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-maps {
+    background: #1A73E8;
+    color: white;
+  }
+
+  .btn-book {
+    background: var(--red);
+    color: white;
+  }
+  .btn-grab {
+    background: #00B14F;
+    color: white;
+  }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* FOOD CARD */
+  .food-section {
+    background: var(--food);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-top: 16px;
+    border: 1px solid rgba(46,125,50,0.15);
+  }
+  .food-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--food-accent);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .food-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(46,125,50,0.12);
+  }
+  .food-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .food-item h5 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .food-item .meal-type {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--food-accent);
+    background: rgba(46,125,50,0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+  .food-item p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 7px;
+  }
+
+  /* TIP */
+  .tip-box {
+    background: var(--tip);
+    border-right: 4px solid var(--tip-accent);
+    border-radius: 12px;
+    padding: 13px 16px;
+    margin-top: 14px;
+  }
+  .tip-box h5 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--tip-accent);
+    margin-bottom: 5px;
+  }
+  .tip-box p {
+    font-size: 0.82rem;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* BOTTOM NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    z-index: 100;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+  }
+  .bottom-nav-btn {
+    flex: 1;
+    max-width: 140px;
+    padding: 12px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: 'Heebo', sans-serif;
+    color: var(--muted);
+    font-size: 0.68rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .bottom-nav-btn .nav-icon { font-size: 1.3rem; }
+  .bottom-nav-btn.active { color: var(--red); }
+
+  /* QUICK TIPS PAGE */
+  #page-tips .tip-card {
+    background: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  #page-tips .tip-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  #page-tips .tip-card p, #page-tips .tip-card li {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  #page-tips .tip-card ul { padding-right: 16px; margin-top: 6px; }
+  #page-tips .tip-card li { margin-bottom: 4px; }
+
+  /* PAGE VISIBILITY */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .section-spacer { height: 20px; }
+
+  /* Responsive */
+  @media (max-width: 400px) {
+    .tl-time { width: 62px; font-size: 0.7rem; }
+    .day-number { width: 38px; height: 38px; font-size: 1rem; border-radius: 10px; }
+  }
+
+  /* CURRENCY */
+  .currency-card {
+    background: white;
+    border-radius: 20px;
+    padding: 22px 20px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .rate-display {
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .rate-loading { color: var(--muted); font-size: 0.9rem; }
+  .rate-live {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--food-accent);
+  }
+  .rate-live span { font-size: 0.8rem; font-weight: 400; color: var(--muted); }
+  .rate-error { color: #c0392b; font-size: 0.85rem; }
+  .rate-source {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .conv-block { margin-bottom: 4px; }
+  .conv-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .conv-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 4px 14px 4px 4px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s;
+  }
+  .conv-row:focus-within { border-color: var(--red); }
+  .conv-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 10px 8px;
+    outline: none;
+    direction: ltr;
+    text-align: left;
+  }
+  .conv-currency {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .conv-result {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--red);
+    margin: 8px 0 16px 4px;
+    direction: ltr;
+    text-align: left;
+  }
+  .conv-divider {
+    text-align: center;
+    font-size: 1.3rem;
+    color: var(--muted);
+    margin: 4px 0 16px;
+  }
+  .quick-ref-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .quick-refs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 4px;
+  }
+  .quick-ref-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quick-ref-item:hover { border-color: var(--red); background: #fff5f5; }
+  .quick-ref-vnd {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .quick-ref-ils {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  /* WEATHER */
+  .wx-now-card {
+    background: linear-gradient(135deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%);
+    border-radius: 22px;
+    padding: 28px 24px;
+    margin-bottom: 14px;
+    color: white;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wx-spinner { color: rgba(255,255,255,0.5); font-size: 0.9rem; }
+  .wx-now-inner { width: 100%; }
+  .wx-now-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .wx-now-temp {
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+  .wx-now-temp sup { font-size: 1.5rem; font-weight: 400; vertical-align: super; }
+  .wx-now-desc {
+    font-size: 1rem;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+  .wx-now-icon { font-size: 3.5rem; line-height: 1; }
+  .wx-now-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .wx-stat {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .wx-stat-val {
+    font-size: 1.1rem;
+    font-weight: 800;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .wx-stat-label {
+    font-size: 0.68rem;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .wx-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-right: 2px;
+  }
+  .wx-forecast {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .wx-day {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .wx-day-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .wx-day-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .wx-day-desc {
+    flex: 1;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  .wx-day-temps {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+    text-align: left;
+    flex-shrink: 0;
+  }
+  .wx-day-temps span { font-weight: 400; color: var(--muted); font-size: 0.82rem; }
+  .wx-rain-bar-wrap {
+    width: 50px;
+    flex-shrink: 0;
+    text-align: center;
+  }
+  .wx-rain-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 3px;
+  }
+  .wx-rain-fill {
+    height: 100%;
+    background: #1A73E8;
+    border-radius: 4px;
+  }
+  .wx-rain-pct {
+    font-size: 0.68rem;
+    color: #1A73E8;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-pattern"></div>
+  <div class="hero-content">
+    <div class="flag-row">🇻🇳</div>
+    <h1>הנוי <span>2026</span></h1>
+    <p class="hero-sub">המסלול המלא של המשפחה · יוני–יולי 2026</p>
+    <div class="part-tabs">
+      <button class="part-tab active" onclick="showPart('a')">חלק א׳ · 26–30 ביוני</button>
+      <button class="part-tab" onclick="showPart('b')">חלק ב׳ · 4–8 ביולי</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGES -->
+<div id="page-itinerary" class="page active">
+  <div class="main">
+
+    <!-- PART A -->
+    <div id="part-a" class="part-section visible">
+      <div class="part-header">
+        <div class="part-label">חלק א׳</div>
+        <h2>הימים הראשונים בהנוי</h2>
+        <p>26–30 ביוני 2026 · Hanoi Solis Hotel</p>
+      </div>
+
+      <!-- DAY 1 -->
+      <div class="day-card" id="day1">
+        <div class="day-header" onclick="toggleDay('day1')">
+          <div class="day-number">1</div>
+          <div class="day-info">
+            <h3>שישי, 26 ביוני – נחיתה</h3>
+            <p>הגעה למלון והתאקלמות</p>
+          </div>
+          <span class="day-emoji">✈️</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">21:15</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>הגעה למלון Hanoi Solis</h4>
+                <p>צ'ק-אין ומנוחה קצרה אחרי הטיסה. המלון ממוקם ברובע העתיק.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Hanoi+Solis+Hotel+Old+Quarter" target="_blank" class="btn btn-maps">📍 Google Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0340&destLng=105.8500&destAddress=Hanoi+Solis+Hotel" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">21:30+</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>ארוחת ערב קלילה ליד המלון</h4>
+                <p>הליכה קצרה של 2–5 דק׳ ברחובות הצרים של הרובע העתיק.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 מקומות אוכל היום</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת ערב – אפשרות א׳</div>
+              <h5>Pho 10 Ly Quoc Su</h5>
+              <p>מוסד אגדי למרק פו בקר. ציר עמוק ובשר רך – מושלם להתאוששות מהטיסה.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=10+Ly+Quoc+Su+Hanoi+Pho+10" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת ערב – אפשרות ב׳</div>
+              <h5>Banh Mi 25</h5>
+              <p>דוכן בנה מי מפורסם – סנדוויץ׳ ויטנאמי בבאגט קריספי עם עוף או בקר. נקי ומהיר.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Banh+Mi+25+Hang+Ca+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 2 -->
+      <div class="day-card" id="day2">
+        <div class="day-header" onclick="toggleDay('day2')">
+          <div class="day-number">2</div>
+          <div class="day-info">
+            <h3>שבת, 27 ביוני – הלב של הנוי</h3>
+            <p>מקדש הספרות, האגם, 36 הרחובות</p>
+          </div>
+          <span class="day-emoji">👣</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">08:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>מקדש הספרות (Van Mieu)</h4>
+                <p>האוניברסיטה הראשונה של ויטנאם מהמאה ה-11. מקום פוטוגני ורגוע.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Temple+of+Literature+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0236&destLng=105.8358&destAddress=Temple+of+Literature" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">11:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>אגם Hoan Kiem ומקדש Ngoc Son</h4>
+                <p>חוצים את גשר העץ האדום הציורי אל המקדש שעל האי.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Hoan+Kiem+Lake+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0286&destLng=105.8524&destAddress=Hoan+Kiem+Lake" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">13:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>צהריים ומנוחת מזגן</h4>
+                <p>הפסקה חובה בחום של יולי.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">15:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>36 רחובות הרובע העתיק</h4>
+                <p>שיטוט בין רחובות המסחר המסורתיים – המשי, הבשמים, הנייר.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Old+Quarter+Hanoi+36+Streets" target="_blank" class="btn btn-maps">📍 Maps</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">19:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>רחוב Ta Hien – "רחוב הבירה"</h4>
+                <p>המקום הכי שמח בלילה – שרפרפי פלסטיק, אוכל רחוב ואווירה ייחודית.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Ta+Hien+Street+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 מקומות אוכל היום</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת צהריים</div>
+              <h5>Bun Cha Dac Kim</h5>
+              <p>מנת הדגל של הנוי: קציצות חזיר בגריל בציר חמוץ-מתוק עם אטריות אורז ועשבי תיבול. חובה לנסות אגרולים (Nem Cua Be).</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Bun+Cha+Dac+Kim+1+Hang+Manh+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                <a href="grab://open?screenType=BOOKING&destLat=21.0338&destLng=105.8497&destAddress=Bun+Cha+Dac+Kim" class="btn btn-grab">🚖 Grab</a>
+              </div>
+            </div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת ערב</div>
+              <h5>ברחוב הבירה Ta Hien</h5>
+              <p>Nem Chua Ran (אגרולים קטנים) או שיפודי עוף/בקר בגריל לצד בירה קרה או שייק פירות.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Ta+Hien+Street+Hanoi+street+food" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 3 -->
+      <div class="day-card" id="day3">
+        <div class="day-header" onclick="toggleDay('day3')">
+          <div class="day-number">3</div>
+          <div class="day-info">
+            <h3>ראשון, 28 ביוני – היסטוריה ואגם המערב</h3>
+            <p>המצודה, מאוזוליאום הו צ׳י מין, West Lake</p>
+          </div>
+          <span class="day-emoji">🏯</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">08:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>מצודת Thang Long</h4>
+                <p>המצודה הקיסרית העתיקה – אתר UNESCO עם שרידים ארכיאולוגיים מרשימים.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Imperial+Citadel+Thang+Long+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0353&destLng=105.8352&destAddress=Thang+Long+Citadel" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">10:45</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>מאוזוליאום הו צ׳י מין</h4>
+                <p>רחבת Ba Dinh, הקבר המרשים של המנהיג והבית הנשיאותי על המים.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Ho+Chi+Minh+Mausoleum+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0369&destLng=105.8346&destAddress=Ho+Chi+Minh+Mausoleum" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">13:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>הפסקת צהריים ומנוחה</h4>
+                <p>מנוחה חובה בחום של יולי.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">15:45</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>מקדש Tran Quoc ואגם West Lake</h4>
+                <p>המגדל הבודהיסטי העתיק ביותר בהנוי, על חצי אי באגם המערבי הענק.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Tran+Quoc+Pagoda+West+Lake+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0490&destLng=105.8358&destAddress=Tran+Quoc+Pagoda" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 מקומות אוכל היום</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת צהריים</div>
+              <h5>Quan An Ngon</h5>
+              <p>מסעדה נהדרת בתוך וילה צרפתית. "שוק אוכל רחוב מוגן ונקי" – כל סוגי אוכל הרחוב ברמה היגיינית גבוהה. חובה: Banh Xeo (פנקייק קריספי ממולא).</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Quan+An+Ngon+18+Phan+Boi+Chau+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                <a href="grab://open?screenType=BOOKING&destLat=21.0269&destLng=105.8449&destAddress=Quan+An+Ngon" class="btn btn-grab">🚖 Grab</a>
+              </div>
+            </div>
+            <div class="food-item">
+              <div class="meal-type">קינוח אחה"צ</div>
+              <h5>Kem Ho Tay – גלידה על האגם</h5>
+              <p>גלידרייה מקומית מפורסמת ממש על אגם המערב. גלידת קוקוס או אורז ירוק תוך כדי טיול.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Kem+Ho+Tay+1+Thanh+Nien+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 4 -->
+      <div class="day-card" id="day4">
+        <div class="day-header" onclick="toggleDay('day4')">
+          <div class="day-number">4</div>
+          <div class="day-info">
+            <h3>שני, 29 ביוני – שוק ובובות</h3>
+            <p>שוק Dong Xuan, תאטרון בובות על המים</p>
+          </div>
+          <span class="day-emoji">🎭</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">09:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>שוק Dong Xuan</h4>
+                <p>שוק סיטונאי מקורה ענק – 3 קומות של בגדים, מזכרות, בדים ותבלינים.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Dong+Xuan+Market+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0367&destLng=105.8497&destAddress=Dong+Xuan+Market" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">13:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>הפסקת צהריים וקפה</h4>
+                <p>מנוחה לפני ההצגה.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">15:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>תאטרון בובות על המים – Thang Long ⚠️ הזמינו מראש!</h4>
+                <p>המופע המסורתי המפורסם עם מוזיקה חיה. חובה לקנות כרטיסים מראש.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Thang+Long+Water+Puppet+Theatre+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="https://www.thanglongwaterpuppet.org/" target="_blank" class="btn btn-book">🎟️ הזמנת כרטיסים</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0315&destLng=105.8526&destAddress=Thang+Long+Water+Puppet+Theatre" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 מקומות אוכל היום</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת צהריים</div>
+              <h5>סמטת האוכל של Dong Xuan</h5>
+              <p>Ngo Dong Xuan – סמטה קטנה עם דוכנים של Bun Rieu (מרק אטריות עגבניות וסרטנים) ושיפודים בלחמנייה.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Ngo+Dong+Xuan+street+food+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+            <div class="food-item">
+              <div class="meal-type">קפה אחה"צ</div>
+              <h5>The Note Coffee ☕</h5>
+              <p>בית קפה בן 4 קומות שכולו מכוסה בפתקי Post-it של מטיילים מכל העולם. חוויה אינסטגרמית לבנות!</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=The+Note+Coffee+64+Luong+Van+Can+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PART B -->
+    <div id="part-b" class="part-section">
+      <div class="part-header">
+        <div class="part-label">חלק ב׳</div>
+        <h2>החזרה להנוי</h2>
+        <p>4–8 ביולי 2026 · Hanoi Solis Hotel</p>
+      </div>
+
+      <!-- DAY 9 -->
+      <div class="day-card" id="day9">
+        <div class="day-header" onclick="toggleDay('day9')">
+          <div class="day-number">9</div>
+          <div class="day-info">
+            <h3>שבת, 4 ביולי – אובמה וקפה ביצה</h3>
+            <p>חזרה מפו לואנג, חוויה קולינרית מפורסמת</p>
+          </div>
+          <span class="day-emoji">☕</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">13:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>הגעה מפו לואנג</h4>
+                <p>נוסעים ישירות למסעדה לפני צ'ק-אין במלון.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">13:15</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>ארוחת צהריים אצל אובמה 🇺🇸</h4>
+                <p>Bun Cha Huong Lien – המסעדה של ברק אובמה ואנתוני בורדיין.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Bun+Cha+Huong+Lien+24+Le+Van+Huu+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0219&destLng=105.8466&destAddress=Bun+Cha+Huong+Lien" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">14:45</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>צ'ק-אין ומנוחה</h4>
+                <p>Hanoi Solis Hotel.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Hanoi+Solis+Hotel" target="_blank" class="btn btn-maps">📍 Maps</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">16:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>קפה ביצה מקורי – Giang Cafe</h4>
+                <p>המקום שבו הומצא קפה הביצה ב-1946. קרם קרמל חם מעל אספרסו חזק.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Giang+Cafe+39+Nguyen+Huu+Huan+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0327&destLng=105.8527&destAddress=Giang+Cafe" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 הייטים של היום</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת צהריים – חובה!</div>
+              <h5>Bun Cha Huong Lien – "Combo Obama"</h5>
+              <p>מנת בון צ'ה + אגרול סרטנים ענק + בירה מקומית. מדובר ב-24 Lê Văn Hưu – הכתובת ההיסטורית.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Bun+Cha+Obama+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DAY 13 -->
+      <div class="day-card" id="day13">
+        <div class="day-header" onclick="toggleDay('day13')">
+          <div class="day-number">13</div>
+          <div class="day-info">
+            <h3>שלישי, 7 ביולי – שוק לילה ופרידה</h3>
+            <p>חזרה מהאלונג, שוק לילה, ארוחת פרידה</p>
+          </div>
+          <span class="day-emoji">🌃</span>
+          <span class="day-toggle">▾</span>
+        </div>
+        <div class="day-body">
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-time">15:30</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>הגעה מהאלונג ביי</h4>
+                <p>חזרה למלון ומנוחה קצרה.</p>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">17:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>שוק הלילה של הרובע העתיק 🛍️</h4>
+                <p>הרחובות נסגרים לתנועה ומהווים מדרחוב קניות ענקי. הזמן של הבנות לקניות אחרונות!</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Hanoi+Night+Market+Old+Quarter" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0349&destLng=105.8491&destAddress=Hanoi+Night+Market" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-time">20:00</div>
+              <div class="tl-dot"></div>
+              <div class="tl-content">
+                <h4>ארוחת פרידה חגיגית 🎉</h4>
+                <p>Cha Ca La Vong – מסעדה היסטורית משנת 1871. מנה אחת בלבד, חוויה שלמה.</p>
+                <div class="nav-buttons">
+                  <a href="https://maps.google.com/?q=Cha+Ca+La+Vong+14+Cha+Ca+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+                  <a href="grab://open?screenType=BOOKING&destLat=21.0355&destLng=105.8483&destAddress=Cha+Ca+La+Vong" class="btn btn-grab">🚖 Grab</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="food-section">
+            <div class="food-section-title">🍜 הייטים של הערב</div>
+            <div class="food-item">
+              <div class="meal-type">ארוחת ערב חגיגית</div>
+              <h5>Cha Ca La Vong – 1871 🏆</h5>
+              <p>מגישים רק מנה אחת: דג מטוגן במחבת שמן במרכז השולחן עם שמיר טרי, בצל ירוק, בוטנים, אטריות אורז ורוטב מקומי. טקס קולינרי שלם.</p>
+              <div class="nav-buttons">
+                <a href="https://maps.google.com/?q=Cha+Ca+La+Vong+Hanoi" target="_blank" class="btn btn-maps">📍 Maps</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GLOBAL TIP -->
+    <div class="tip-box" style="margin-top: 8px;">
+      <h5>💡 טיפ קולינרי לכל ימי הנוי</h5>
+      <p>ליד המלון יש המון דוכני "Juice & Smoothie". כשהבנות מרגישות את הלחות של יולי – עצרו בדוכן רחוב ובקשו <strong>Sinh To Mango</strong> (שייק מנגו טרי על קרח) או מים של קוקוס שלם שפותחים במקום עם קשית. זול, היגייני ומרענן בשניות.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- PAGE: QUICK TIPS -->
+<div id="page-tips" class="page">
+  <div class="main">
+    <div class="section-spacer"></div>
+    <div class="part-header">
+      <div class="part-label">מידע שימושי</div>
+      <h2>טיפים להנוי</h2>
+      <p>מה שכדאי לדעת לפני שיוצאים</p>
+    </div>
+
+    <div class="tip-card">
+      <h3>🌡️ מזג האוויר ביולי</h3>
+      <p>הנוי ביולי חמה ולחה מאוד – טמפ' של 33–36°C עם לחות גבוהה. תכננו פעילויות כבדות בבוקר (עד 13:00) ומנוחת מזגן בצהריים. אחה"צ בין 15:30–18:30 בסדר.</p>
+    </div>
+
+    <div class="tip-card">
+      <h3>🚗 תנועה וניווט</h3>
+      <ul>
+        <li>הרובע העתיק הכי נוח ברגל – חנייה קשה ומרחקים קצרים</li>
+        <li>לאתרים רחוקים (West Lake, מאוזוליאום) – Grab (מקבילה אסייתית ל-Uber)</li>
+        <li>Google Maps מדויק יותר בוויטנאם מאפליקציות ניווט אחרות</li>
+        <li>לא לחצות כביש בפתאומיות – ללכת בקצב ברור ועקבי</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>💰 תשלומים</h3>
+      <ul>
+        <li>מטבע מקומי: ד"ו ויטנאמי (VND). 1 ₪ ≈ 7,000 VND</li>
+        <li>אוכל רחוב: 30,000–80,000 VND למנה</li>
+        <li>רוב המקומות מקבלים רק מזומן – כדאי למשוך בכניסה</li>
+        <li>כרטיס אשראי מתקבל במסעדות בינוניות ומעלה</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>🎟️ מה להזמין מראש</h3>
+      <ul>
+        <li><strong>תאטרון הבובות על המים</strong> – הזמינו לפחות יום מראש</li>
+        <li>שאר האתרים – כניסה בקופה במקום</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>🍜 איך להזמין אוכל רחוב</h3>
+      <ul>
+        <li>הצביעו על מה שאתם רוצים – מנו הרבה מקומות תפריט תמונות</li>
+        <li>שאלו "How spicy?" לפני ההזמנה</li>
+        <li>תמיד בדקו שהמים הם בקבוקיים (לא מהברז)</li>
+        <li>דוכנים עם תור ארוך = סימן טוב לאיכות</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h3>📱 אפליקציות חובה</h3>
+      <ul>
+        <li><strong>Grab</strong> – הזמנת מוניות (להוריד לפני הטיסה)</li>
+        <li><strong>Google Translate</strong> – עם מצלמה לתפריטים בוויטנאמית</li>
+        <li><strong>Google Maps</strong> – ניווט + שמירת מפות אופליין</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: CURRENCY -->
+<div id="page-currency" class="page">
+  <div class="main">
+    <div class="section-spacer"></div>
+    <div class="part-header">
+      <div class="part-label">המרת מטבע</div>
+      <h2>VND ⇄ ₪</h2>
+      <p>שער עדכני בזמן אמת</p>
+    </div>
+
+    <div class="currency-card">
+      <div class="rate-display" id="rate-display">
+        <span class="rate-loading">טוען שער...</span>
+      </div>
+      <div class="rate-source" id="rate-source"></div>
+
+      <!-- VND → ILS -->
+      <div class="conv-block">
+        <label class="conv-label">דונג ויטנאמי (VND) ← הכנס סכום</label>
+        <div class="conv-row">
+          <input type="number" id="vnd-input" class="conv-input" placeholder="לדוגמה: 200000" inputmode="numeric" oninput="convertVndToIls()" />
+          <span class="conv-currency">₫</span>
+        </div>
+        <div class="conv-result" id="vnd-result">— ₪</div>
+      </div>
+
+      <div class="conv-divider">⇅</div>
+
+      <!-- ILS → VND -->
+      <div class="conv-block">
+        <label class="conv-label">שקל ישראלי (ILS) ← הכנס סכום</label>
+        <div class="conv-row">
+          <input type="number" id="ils-input" class="conv-input" placeholder="לדוגמה: 50" inputmode="numeric" oninput="convertIlsToVnd()" />
+          <span class="conv-currency">₪</span>
+        </div>
+        <div class="conv-result" id="ils-result">— ₫</div>
+      </div>
+    </div>
+
+    <!-- QUICK REFS -->
+    <div class="quick-ref-title">סכומים נפוצים</div>
+    <div class="quick-refs" id="quick-refs">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="tip-box" style="margin-top: 16px;">
+      <h5>💡 טיפ להמרה מנטלית מהירה</h5>
+      <p>חלקו כל סכום ב-VND ב-<strong>7,000</strong> כדי לקבל שקלים בקירוב. לדוגמה: 140,000 VND ÷ 7,000 = ~20 ₪.</p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: WEATHER -->
+<div id="page-weather" class="page">
+  <div class="main">
+    <div class="section-spacer"></div>
+    <div class="part-header">
+      <div class="part-label">מזג אוויר</div>
+      <h2>הנוי עכשיו</h2>
+      <p id="weather-updated">טוען נתונים...</p>
+    </div>
+
+    <!-- CURRENT -->
+    <div class="wx-now-card" id="wx-now">
+      <div class="wx-spinner">⏳ טוען...</div>
+    </div>
+
+    <!-- 7-DAY FORECAST -->
+    <div class="wx-section-title" id="wx-forecast-title" style="display:none">תחזית 7 ימים</div>
+    <div class="wx-forecast" id="wx-forecast"></div>
+
+    <div class="tip-box" style="margin-top:16px">
+      <h5>💡 מה לצפות ביולי בהנוי</h5>
+      <p>יולי הוא עיצומו של עונת הגשמים – גשמי רעמים קצרים ועזים בדרך כלל אחה"צ. בוקר חם ולח, אחה"צ לפעמים מתקרר מעט אחרי הגשם. תמיד כדאי לצאת עם מטרייה קטנה.</p>
+    </div>
+
+    <a href="weather://" onclick="setTimeout(function(){window.location.href='https://www.google.com/search?q=weather+hanoi+vietnam';},800);" style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;padding:14px 20px;border-radius:16px;background:#1A1A2E;color:white;text-decoration:none;font-family:Heebo,sans-serif;font-weight:700;font-size:0.95rem;box-shadow:0 4px 14px rgba(0,0,0,0.18);">
+      <span style="font-size:1.3rem;">🌤️</span> פתח באפליקציית מזג האוויר
+    </a>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="bottom-nav-btn active" onclick="showPage('itinerary', this)">
+    <span class="nav-icon">🗺️</span>
+    <span>מסלול</span>
+  </button>
+  <button class="bottom-nav-btn" onclick="showPage('tips', this)">
+    <span class="nav-icon">💡</span>
+    <span>טיפים</span>
+  </button>
+  <button class="bottom-nav-btn" onclick="showPage('currency', this)">
+    <span class="nav-icon">💱</span>
+    <span>המרת מטבע</span>
+  </button>
+  <button class="bottom-nav-btn" onclick="showPage('weather', this); loadWeather()">
+    <span class="nav-icon">🌤️</span>
+    <span>מזג אוויר</span>
+  </button>
+</div>
+
+<script>
+  function toggleDay(id) {
+    const card = document.getElementById(id);
+    card.classList.toggle('open');
+  }
+
+  function showPart(part) {
+    document.querySelectorAll('.part-section').forEach(s => s.classList.remove('visible'));
+    document.querySelectorAll('.part-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('part-' + part).classList.add('visible');
+    event.target.classList.add('active');
+  }
+
+  function showPage(name, btn) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.bottom-nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Open first day by default
+  document.getElementById('day1').classList.add('open');
+
+  // CURRENCY CONVERTER
+  let vndToIls = null;
+
+  const QUICK_AMOUNTS = [
+    { vnd: 30000, label: 'אוכל רחוב' },
+    { vnd: 80000, label: 'מנה במסעדה' },
+    { vnd: 200000, label: 'ארוחה זוגית' },
+    { vnd: 500000, label: 'כניסה לאתר' },
+    { vnd: 1000000, label: '1M ₫' },
+    { vnd: 5000000, label: '5M ₫' },
+  ];
+
+  async function fetchRate() {
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 200,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [{ role: 'user', content: 'What is the current ILS to VND exchange rate? Reply with ONLY valid JSON, no other text: {"rate": <VND per 1 ILS as number>, "date": "<YYYY-MM-DD>"}' }]
+        })
+      });
+      const data = await res.json();
+      const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+      const match = text.match(/\{[^{}]*"rate"[^{}]*\}/);
+      if (!match) throw new Error('no json');
+      const parsed = JSON.parse(match[0]);
+      vndToIls = 1 / parsed.rate;
+      document.getElementById('rate-display').innerHTML =
+        `<span class="rate-live">1,000 ₫ = ${(vndToIls * 1000).toFixed(4)} ₪ <span>· שער חי</span></span>`;
+      document.getElementById('rate-source').textContent =
+        `מקור: חיפוש בזמן אמת · עודכן ${parsed.date || 'היום'}`;
+      renderQuickRefs();
+    } catch (e) {
+      vndToIls = 1 / 7000;
+      document.getElementById('rate-display').innerHTML =
+        `<span class="rate-live">1,000 ₫ ≈ 0.1429 ₪ <span>· שער משוער</span></span>`;
+      document.getElementById('rate-source').textContent = 'לא ניתן לטעון שער עדכני – משתמש בקירוב';
+      renderQuickRefs();
+    }
+  }
+
+  function fmt(n) {
+    if (n >= 1000000) return (n / 1000000).toFixed(2).replace(/\.?0+$/, '') + 'M';
+    if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.?0+$/, '') + 'K';
+    return n.toFixed(0);
+  }
+
+  function renderQuickRefs() {
+    const el = document.getElementById('quick-refs');
+    el.innerHTML = QUICK_AMOUNTS.map(({ vnd, label }) => {
+      const ils = (vnd * vndToIls).toFixed(2);
+      return `<div class="quick-ref-item" onclick="fillVnd(${vnd})">
+        <div class="quick-ref-vnd">${fmt(vnd)} ₫ · ${label}</div>
+        <div class="quick-ref-ils">≈ ${ils} ₪</div>
+      </div>`;
+    }).join('');
+  }
+
+  function fillVnd(amount) {
+    document.getElementById('vnd-input').value = amount;
+    convertVndToIls();
+  }
+
+  function convertVndToIls() {
+    if (!vndToIls) return;
+    const vnd = parseFloat(document.getElementById('vnd-input').value);
+    const el = document.getElementById('vnd-result');
+    if (isNaN(vnd) || vnd === 0) { el.textContent = '— ₪'; return; }
+    el.textContent = (vnd * vndToIls).toFixed(2) + ' ₪';
+  }
+
+  function convertIlsToVnd() {
+    if (!vndToIls) return;
+    const ils = parseFloat(document.getElementById('ils-input').value);
+    const el = document.getElementById('ils-result');
+    if (isNaN(ils) || ils === 0) { el.textContent = '— ₫'; return; }
+    const vnd = Math.round(ils / vndToIls);
+    el.textContent = vnd.toLocaleString() + ' ₫';
+  }
+
+
+  // WEATHER (Open-Meteo, Hanoi coords: 21.0245, 105.8412)
+  let weatherLoaded = false;
+
+  const WX_CODES = {
+    0:  ['☀️', 'שמיים בהירים'],
+    1:  ['🌤️', 'בהיר בעיקר'],
+    2:  ['⛅', 'מעונן חלקית'],
+    3:  ['☁️', 'מעונן'],
+    45: ['🌫️', 'ערפל'],
+    48: ['🌫️', 'ערפל קפוא'],
+    51: ['🌦️', 'טפטוף קל'],
+    53: ['🌦️', 'טפטוף מתון'],
+    55: ['🌧️', 'טפטוף עז'],
+    61: ['🌧️', 'גשם קל'],
+    63: ['🌧️', 'גשם מתון'],
+    65: ['🌧️', 'גשם עז'],
+    80: ['🌦️', 'מקלחות קלות'],
+    81: ['🌧️', 'מקלחות מתונות'],
+    82: ['⛈️', 'מקלחות עזות'],
+    95: ['⛈️', 'סופת רעמים'],
+    96: ['⛈️', 'סופה עם ברד'],
+    99: ['⛈️', 'סופה עזה'],
+  };
+
+  const DAYS_HE = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+
+  function wxIcon(code) { return (WX_CODES[code] || ['🌡️','לא ידוע'])[0]; }
+  function wxDesc(code) { return (WX_CODES[code] || ['🌡️','לא ידוע'])[1]; }
+
+  async function loadWeather() {
+    if (weatherLoaded) return;
+    try {
+      const prompt = `Fetch current weather and 7-day forecast for Hanoi, Vietnam (lat 21.0245, lon 105.8412) from open-meteo.com. Use this URL: https://api.open-meteo.com/v1/forecast?latitude=21.0245&longitude=105.8412&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia/Bangkok&forecast_days=7
+
+Return ONLY a JSON object with this exact structure, no other text:
+{"current":{"temperature_2m":<num>,"relative_humidity_2m":<num>,"apparent_temperature":<num>,"weather_code":<num>,"wind_speed_10m":<num>,"precipitation":<num>,"time":"<ISO string>"},"daily":{"time":["<date>",...],"weather_code":[<num>,...],"temperature_2m_max":[<num>,...],"temperature_2m_min":[<num>,...],"precipitation_probability_max":[<num>,...]}}`; 
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await res.json();
+      const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+      const match = text.match(/\{[\s\S]*"current"[\s\S]*"daily"[\s\S]*\}/);
+      if (!match) throw new Error('no json');
+      const d = JSON.parse(match[0]);
+      const c = d.current;
+      const now = new Date(c.time);
+      const timeStr = now.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+      document.getElementById('weather-updated').textContent = `עודכן ב-${timeStr} שעון הנוי`;
+
+      document.getElementById('wx-now').innerHTML = `
+        <div class="wx-now-inner">
+          <div class="wx-now-top">
+            <div>
+              <div class="wx-now-temp">${Math.round(c.temperature_2m)}<sup>°C</sup></div>
+              <div class="wx-now-desc">${wxDesc(c.weather_code)} · מורגש ${Math.round(c.apparent_temperature)}°</div>
+            </div>
+            <div class="wx-now-icon">${wxIcon(c.weather_code)}</div>
+          </div>
+          <div class="wx-now-stats">
+            <div class="wx-stat">
+              <span class="wx-stat-val">${c.relative_humidity_2m}%</span>
+              <span class="wx-stat-label">לחות</span>
+            </div>
+            <div class="wx-stat">
+              <span class="wx-stat-val">${Math.round(c.wind_speed_10m)} km/h</span>
+              <span class="wx-stat-label">רוח</span>
+            </div>
+            <div class="wx-stat">
+              <span class="wx-stat-val">${c.precipitation} mm</span>
+              <span class="wx-stat-label">משקעים</span>
+            </div>
+          </div>
+        </div>`;
+
+      const forecastEl = document.getElementById('wx-forecast');
+      forecastEl.innerHTML = d.daily.time.map((dateStr, i) => {
+        const date = new Date(dateStr + 'T00:00:00');
+        const dayName = i === 0 ? 'היום' : i === 1 ? 'מחר' : DAYS_HE[date.getDay()];
+        const rainPct = d.daily.precipitation_probability_max[i] || 0;
+        return `<div class="wx-day">
+          <div class="wx-day-name">${dayName}</div>
+          <div class="wx-day-icon">${wxIcon(d.daily.weather_code[i])}</div>
+          <div class="wx-day-desc">${wxDesc(d.daily.weather_code[i])}</div>
+          <div class="wx-rain-bar-wrap">
+            <div class="wx-rain-bar"><div class="wx-rain-fill" style="width:${rainPct}%"></div></div>
+            <div class="wx-rain-pct">${rainPct}%</div>
+          </div>
+          <div class="wx-day-temps">${Math.round(d.daily.temperature_2m_max[i])}° <span>/ ${Math.round(d.daily.temperature_2m_min[i])}°</span></div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('wx-forecast-title').style.display = 'block';
+      weatherLoaded = true;
+    } catch(e) {
+      document.getElementById('wx-now').innerHTML = `<div class="wx-spinner">לא ניתן לטעון נתוני מזג אוויר – בדקו חיבור לאינטרנט</div>`;
+      document.getElementById('weather-updated').textContent = '';
+    }
+  }
+</script>
+</body>
+</html>
